@@ -2,3 +2,11 @@
 	path = makefiles
 	url = https://github.com/dbosk/makefiles.git
 	branch = master
+[submodule "stacksmashlab"]
+	path = stacksmashlab
+	url = https://github.com/OpenSecEd/stacksmashlab.git
+	branch = master
+[submodule "malwarelab"]
+	path = malwarelab
+	url = https://github.com/OpenSecEd/malwarelab.git
+	branch = master

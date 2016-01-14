@@ -24,6 +24,10 @@ Then you can go into the directory of the desired document and run `make`.
 The source files are structured as follows:
 
 - `overview` contains slides giving an overview of the area.
+- `stacksmahlab` is a submodule containing lab instructions for experimenting 
+  with stack smashing.
+- `malwarelab` is a submodule containing lab instructions for experimenting 
+  with self-replicating and reproducible binaries.
 
 In each directory the files are structured as follows:
 
