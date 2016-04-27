@@ -1,0 +1,479 @@
+\title{%
+  Software Security
+}
+\author{%
+  Daniel Bosk
+}
+\institute[MIUN IKS]{%
+  Department of Information and Communication Systems,\\
+  Mid Sweden University, SE-851\,70 Sundsvall
+}
+\date{\today}
+
+\mode<presentation>{%
+  \begin{frame}
+    \maketitle
+  \end{frame}
+}
+\mode<article>{%
+  \maketitle
+}
+
+\mode*
+
+\begin{abstract}
+  \input{abstract.tex}
+\end{abstract}
+
+% Since this a solution template for a generic talk, very little can
+% be said about how it should be structured. However, the talk length
+% of between 15min and 45min and the theme suggest that you stick to
+% the following rules:  
+
+% - Exactly two or three sections (other than the summary).
+% - At *most* three subsections per section.
+% - Talk about 30s to 2min per frame. So there should be between about
+%   15 and 30 frames, all told.
+
+
+\section{Introduction}
+
+\subsection{Security and Reliability}
+
+\begin{frame}
+  \begin{itemize}
+    \item As long as our computer is offline, used only by ourselves, and we 
+      don't add any accessories (e.g.\ USB devices~\cite{ieeespectrum2014usb}), 
+      then we don't have any problems.
+
+      \pause{}
+
+    \item Problems start to occur when other users start using our software (in 
+      some way), then input to our programs isn't necessarily what we expect.
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \begin{description}
+    \item[Software reliability] This concerns software quality in the sense of 
+      accidental failures, i.e.\ the assumption that input is benign.
+
+      \pause{}
+
+    \item[Software security] This concerns software quality in the sense of 
+      intentional failures, i.e.\ the assumption that input is malign.
+
+  \end{description}
+\end{frame}
+
+\subsection{Changes}
+
+% XXX add better storyline to changes
+
+\begin{frame}
+  \begin{itemize}
+    \item Change is one of the dangers to security.
+
+    \item There are systems which are designed to be secure, and actually are 
+      secure, but then \dots
+
+    \item upgrades are needed, or not needed but wanted.
+
+    \item This might come in the form of updating a component or utilizing the 
+      system in an environment it wasn't designed for.
+
+  \end{itemize}
+\end{frame}
+
+
+\section{Broken Abstractions}
+
+\subsection{File System Paths}
+
+\begin{frame}[fragile]
+  \inputminted{python}{jail.py}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{example}[./jail.py ../../etc/passwd]
+    \begin{pycode}
+import jail
+jail.main(["jailopen", "../../etc/passwd"])
+    \end{pycode}
+  \end{example}
+\end{frame}
+
+\begin{frame}
+  \pyc[variable]{import os}
+  \begin{alertblock}{The Problem: Abstraction of paths}
+    \begin{itemize}
+      \item We had \pyb[variable]{JAIL_PATH = os.environ["HOME"]}.
+      \item We let \pyb[variable]{filename = "../../etc/passwd"}.
+      \item Thus the file we open is \pyb[variable]{JAIL_PATH + "/" + filename} 
+        which results in \pyc[variable]{print(JAIL_PATH + "/" + filename)}.
+      \item Hence we actually read /etc/passwd.
+    \end{itemize}
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}
+    \item Fine, we ban the string \mintinline{python}{"../"}.
+
+    \item Then what about \mintinline{python}{"..\%c0\%af.."}?
+
+  \end{itemize}
+\end{frame}
+
+\subsection{Character Encoding}
+
+\begin{frame}
+  \begin{itemize}
+    \item All character representations in the computer comes in the form of 
+      different encodings, e.g.\ UTF-8 encoding.
+
+    \item The decoders might be programmed differently, some takes into account 
+      the errors in different encoders to compensate -- and this can be 
+      exploited.
+
+    \item Where the encoding and decoding is done can also be exploited.
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \begin{block}{UTF-8}
+  \end{block}
+\end{frame}
+
+% XXX add more details on UTF-8 coding
+
+\subsection{Integer Overflows}
+
+% XXX add more examples on integer overflows
+\begin{frame}[fragile]
+  \inputminted{C}{combine.c}
+\end{frame}
+
+\begin{frame}
+  \begin{alertblock}{The Problem: Abstraction of integers}
+    \begin{itemize}
+      \item Let \mintinline{C}{len2} be very long, say \(2^{32} - 1\), i.e.\ 
+        \mintinline{C}{len2 = 0xffffffff}.
+
+      \item Now we have
+        \begin{align*}
+          \text{\mintinline{C}{len1}} + \text{\mintinline{C}{len2}} 
+          + 1 \pmod{2^{32}}
+          &= \text{\mintinline{C}{len1}} + 2^{32} - 1 + 1 \pmod{2^{32}} \\
+          &= \text{\mintinline{C}{len1}} \pmod{2^{32}} \\
+          &< \text{\mintinline{C}{sizeof(buf)}}.
+        \end{align*}
+
+      \item Thus we pass the test, although we shouldn't.
+    \end{itemize}
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}
+  \begin{alertblock}
+    This is worse if we use \emph{signed} integers \dots
+  \end{alertblock}
+\end{frame}
+
+% XXX add more details and other examples of composition
+\subsection{Data and Code}
+
+\begin{frame}[fragile]
+  \begin{example}[echo.sh "-E test\textbackslash ning"]
+    \inputminted{sh}{echo.sh}
+    \begin{pycode}[echo.sh]
+import subprocess
+proc = subprocess.Popen(["./echo.sh", "-E test\\ning"], \
+  stdout=subprocess.PIPE)
+print("\\begin{verbatim}" + proc.stdout.read().decode("utf-8") + \
+  "\\end{verbatim}")
+    \end{pycode}
+  \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{example}[echofix.sh "-E test\textbackslash ning"]
+    \inputminted{sh}{echofix.sh}
+    \begin{pycode}[echofix.sh]
+import subprocess
+proc = subprocess.Popen(["./echofix.sh", "-E test\\ning"], \
+  stdout=subprocess.PIPE)
+print("\\begin{verbatim}" + proc.stdout.read().decode("utf-8") + \
+  "\\end{verbatim}")
+    \end{pycode}
+  \end{example}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}
+    \item The login(1) and rlogin(1) composition bug was found in Linux and AIX 
+      systems which didn't check the syntax of the username.
+
+    \item The syntax of login(1) is \mintinline{sh}{login [-p] [-h host] [[-f] 
+        user]}.
+
+    \item The syntax of rlogin(1) is \mintinline{sh}{rlogin [-l user] machine}.
+
+    \item rlogin(1) connects to the machine and runs \mintinline{sh}{login user 
+        machine}.
+
+    \item However, the user could be chosen to be \enquote{-froot}.
+  \end{itemize}
+\end{frame}
+
+% XXX add canonical representations
+%\subsection{Canonical Representations}
+%
+%\begin{frame}
+%\end{frame}
+
+% XXX add better description of scripting vuln
+
+\begin{frame}[fragile]
+  \begin{minted}{sh}
+    cat ${1} | mail ${2}
+  \end{minted}
+  \begin{itemize}
+    \item What happens with the address
+      \mintinline{sh}{"foo@bar.org | rm -Rf /"}?
+  \end{itemize}
+\end{frame}
+
+% XXX add better description and examples of SQL injection
+
+\begin{frame}[fragile]
+  \begin{minted}[startinline]{php}
+    $sql = "SELECT * FROM client WHERE name = '$name'"
+  \end{minted}
+  \begin{itemize}
+    \item Insert the name \mintinline[startinline]{php}{Eve' OR 1=1--}.
+    \item This will get a totally different meaning.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{BobbyTables.png}
+    \caption{%
+      XKCD's Exploits of a Mom.
+      Image: \cite{BobbyTables}.
+    }
+  \end{figure}
+\end{frame}
+
+
+\section{Memory Management}
+
+\subsection{Memory Structure}
+
+\begin{frame}
+  \includegraphics[height=\textheight]{procmem.jpg}
+\end{frame}
+
+\subsection{Overruns}
+
+% XXX add more description of buffer overruns
+\begin{frame}
+  \begin{itemize}
+    \item Buffer overruns
+      \begin{itemize}
+        \item Stack overruns
+        \item Heap overruns
+      \end{itemize}
+
+    \item All variables in a program use storage from either the stack or heap.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \inputminted{C}{login.c}
+\end{frame}
+
+% XXX add figure for previous example
+
+% XXX add more examples of overruns
+
+%\subsection{Double-Free Vulnerabilities}
+%
+%\begin{frame}
+%\end{frame}
+
+\subsection{Type Confusion}
+
+% XXX clarify slide on type confusion
+\begin{frame}
+  \begin{itemize}
+    \item There are some problems in object-oriented languages too.
+    \item Trick the system to point to a different memory location.
+    \item Thus a write using one type actually modifies something believed to 
+      be of another type somewhere else.
+  \end{itemize}
+\end{frame}
+
+
+\section{Malware}
+
+% XXX add better storyline to malware
+\subsection{Background}
+
+\begin{frame}
+  \begin{itemize}
+    \item Comes from \emph{malicious software} and means software with 
+      a malicious intent.
+
+    \item In the early days they were mostly experiments or pranks.
+
+    \item Today they are mostly used for special purposes:
+      \begin{itemize}
+        \item steal personal, financial or business information,
+        \item cripple competition,
+        \item etc.
+      \end{itemize}
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}
+    \item There are many types of malware.
+
+    \item Their classification depends on the largest threat vector.
+
+  \end{itemize}
+\end{frame}
+
+\subsection{Malware Types}
+
+\begin{frame}[allowframebreaks]
+  \begin{description}
+    \item[Computer Virus]
+      A form of malware which has self-replicating code.
+      It \emph{infects} other programs by inserting itself into their program 
+      code, and in turn when these programs are run the virus payload is run to 
+      replicate even further.
+
+    \item[Worm]
+      A form of malware which replicates itself, not by infection, but by 
+      copying itself to different disks, via networks, or even emailing itself 
+      automatically to everyone in the user's contact list.
+
+    \item[Trojan Horse]
+      A form of malware which acts as a legitimate program but has hidden 
+      features which are malicious, e.g.\ a utility program which steals your 
+      login credentials in the background or simply acts as a backdoor.
+      Usually used in combination of social engineering.
+
+    \item[Rootkit]
+      A piece of software designed to provide access that would otherwise be 
+      restricted.
+      It also keeps well-hidden and is notoriously difficult to detect and 
+      remove.
+      Usually this comes from modifying the operating system.
+
+    \item[Spyware]
+      This software simply tries to gather information about a target without 
+      their knowledge.
+      Usually the collected information is sent to a third party.
+
+      Keylogging falls under this category.
+
+    \item[Adware]
+      This is simply a type of malware that presents advertisements to the user
+      of the infected system.
+      Obviously staying undetected is not an option, so making itself difficult
+      to remove is the strategy of choice.
+
+    \item[Scareware]
+      This is a type of malware that uses social engineering to trick users to 
+      buy unwanted software, e.g.\ fake antivirus software.
+
+    \item[Ransomware]
+      This is a type of malware that restricts the users access to the system.
+      A common technique is to encrypt all the user's files.
+      Then the user is presented with the option of buying the decryption key 
+      for bitcoins.
+
+      They typically propagate as trojans.
+
+  \end{description}
+\end{frame}
+
+
+
+% XXX add defences to software security, perhaps inline
+% XXX instead of separate section
+
+%\section{Defences}
+%
+%\subsection{Prevention}
+%
+%\subsection{Hardware}
+%
+%\begin{frame}
+%  \begin{itemize}
+%    \item Hardware
+%    %\item Modus Operandi
+%    \item Safer Functions
+%    \item Filtering
+%    \item Type Safety
+%  \end{itemize}
+%\end{frame}
+%
+%%\begin{frame}
+%%\end{frame}
+%%
+%%\begin{frame}
+%%\end{frame}
+%%
+%%\begin{frame}
+%%\end{frame}
+%%
+%%\begin{frame}
+%%\end{frame}
+%
+%\subsection{Detection}
+%
+%\begin{frame}
+%  \begin{itemize}
+%    \item Canaries
+%    \item Code Inspection
+%    \item Testing
+%  \end{itemize}
+%\end{frame}
+%
+%%\begin{frame}
+%%\end{frame}
+%%
+%%\begin{frame}
+%%\end{frame}
+%
+%\subsection{Mitigation}
+%
+%\begin{frame}
+%  \begin{itemize}
+%    \item Least privilege \dots
+%  \end{itemize}
+%\end{frame}
+%
+%\subsection{Reaction}
+%
+%\begin{frame}
+%  \begin{itemize}
+%    \item Keep up to date \dots
+%  \end{itemize}
+%\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+  \small
+  \printbibliography{}
+\end{frame}
