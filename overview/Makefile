@@ -7,7 +7,7 @@ SRC=		overview-content.tex abstract.tex overview.bib
 SRC+=		jail.py
 SRC+=		combine.c
 SRC+=		echo.sh echofix.sh
-SRC+=		bobby_tables.png
+SRC+=		BobbyTables.png
 SRC+=		procmem.jpg
 SRC+=		login.c
 
