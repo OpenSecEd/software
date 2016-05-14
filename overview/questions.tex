@@ -1,0 +1,98 @@
+\question[3]\label{q:software}
+% examgen: software:A
+Can a files such as images (e.g.\ JPEGs) and other data be dangerous?
+
+\begin{solution}
+  Yes, they can contain machine code which can be executed if there is e.g.\ 
+  a buffer overrun vulnerability in the software that reads the data.
+\end{solution}
+
+
+\question[3]\label{q:software}
+% examgen: software:E:C
+We have talked about how the users' mental models of how a program (and 
+computer) works can endanger the users' security when the mental model and 
+reality are not aligned.
+This is true also for developers (we mentioned this when we talked about 
+software security), give an example of how the developers' mental models are 
+relevant for software security.
+
+\begin{solution}
+  Gollmann talked about broken abstractions.
+  One example is characters: usually we abstract away the encoding and decoding 
+  parts, we see them as characters and not bytes.
+  So encodings like UTF-8 can cause problems since the same character can be 
+  represented by several byte sequences.
+
+  Another is the finite precision arithmetic that we work with in computers, 
+  usually congruences modulo \(2^{32}\) or \(2^{64}\).
+\end{solution}
+
+
+\question[3]\label{q:software}
+% examgen: software:E:C:A
+Give an example where \enquote{data} can be mistaken for \enquote{code}.
+
+\begin{solution}
+  Shell scripting is an easy example.
+  Here you can store part of the code in variables, the simply substitute them.
+  Consider the following \texttt{/bin/echo -e \$\{1\}}.
+  The variable \texttt{\$\{1\}} will be substituted and the result will be 
+  interpreted as code.
+\end{solution}
+
+
+\question\label{q:software}
+% examgen: software:E:C
+Describe the three malware reproduction techniques
+\begin{parts}
+  \part[1] virus,
+  \begin{solution}
+    The virus inserts its own code into other programs code.
+    When the other programs are run the virus' payload is run too and the 
+    infection can spread further.
+  \end{solution}
+
+  \part[1] worm,
+  \begin{solution}
+    The worm spreads by its own means, e.g.\ by utilizing networks (shared file 
+    systems, remote executions bugs in network services) or emailing itself 
+    using available programs on the computer.
+  \end{solution}
+
+  \part[1] trojan horse.
+  \begin{solution}
+    The trojan horse is a legitimate-looking program which contains unwanted 
+    functionality.
+    E.g.\ it is a flash-light app, but in the background it uploads the contact 
+    list to the app's developer.
+  \end{solution}
+\end{parts}
+
+
+\question\label{q:software}
+% examgen: software:E:C
+Describe the three malware payload types
+\begin{parts}
+  \part[1] root-kit,
+  \begin{solution}
+    The root-kit is designed to fully compromise the system, gaining root 
+    privileges.
+    Either it provides a back-door or it simply make predefined modifications 
+    to the system behaviour.
+    It usually modifies the operating system to stay hidden from the user.
+  \end{solution}
+
+  \part[1] spyware,
+  \begin{solution}
+    Spyware records information about the user of the system, e.g.\ logging 
+    key-presses or getting the browser history.
+  \end{solution}
+
+  \part[1] ransomware.
+  \begin{solution}
+    Ransomware encrypts the files in the file system.
+    Then it asks the user for a ransom: the user has to pay to get the 
+    decryption key.
+  \end{solution}
+\end{parts}
