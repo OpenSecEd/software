@@ -24,5 +24,13 @@ procmem.jpg:
 BobbyTables.png:
 	wget -O $@ http://imgs.xkcd.com/comics/exploits_of_a_mom.png
 
+.PHONY: clean-depends
+clean-depends:
+	${RM} procmem.jpg BobbyTables.png
+
+.PHONY: clean
+clean:
+	${RM} -R __pycache__ _minted-*
+
 INCLUDE_MAKEFILES=../makefiles
 include ${INCLUDE_MAKEFILES}/tex.mk
