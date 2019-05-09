@@ -41,17 +41,19 @@
 \subsection{Security and Reliability}
 
 \begin{frame}
-  \begin{itemize}
-    \item As long as our computer is offline, used only by ourselves, and we 
-      don't add any accessories (e.g.\ USB devices~\cite{ieeespectrum2014usb}), 
-      then we don't have any problems.
+  \begin{remark}
+    \begin{itemize}
+      \item As long as our computer is offline, used only by ourselves, and we 
+        don't add any accessories (e.g.\ USB devices~\cite{ieeespectrum2014usb}), 
+        then we don't have any problems.
 
-      \pause{}
+        \pause
 
-    \item Problems start to occur when other users start using our software (in 
-      some way), then input to our programs isn't necessarily what we expect.
+      \item Problems start to occur when other users start using our software (in 
+        some way), then input to our programs isn't necessarily what we expect.
 
-  \end{itemize}
+    \end{itemize}
+  \end{remark}
 \end{frame}
 
 \begin{frame}
@@ -63,8 +65,25 @@
 
     \item[Software security] This concerns software quality in the sense of 
       intentional failures, i.e.\ the assumption that input is malign.
-
   \end{description}
+\end{frame}
+
+\begin{frame}
+  \begin{question}
+    \begin{itemize}
+      \item Test-driven development? C'est la mode.
+    \end{itemize}
+  \end{question}
+
+  \pause
+
+  \begin{solution}[BSIMM\footfullcite{BSIMMFindings}]
+    \begin{itemize}
+      \item Do code review.
+      \item Have a Software Security Group (SSG).
+      \item Integrate SSG into the organization (have a satellite).
+    \end{itemize}
+  \end{solution}
 \end{frame}
 
 \subsection{Changes}
@@ -72,18 +91,18 @@
 % XXX add better storyline to changes
 
 \begin{frame}
-  \begin{itemize}
-    \item Change is one of the dangers to security.
+  \begin{remark}[Changes \dots]
+    \begin{itemize}
+      \item There are systems which are designed to be secure, and actually are 
+        secure, but then \dots
 
-    \item There are systems which are designed to be secure, and actually are 
-      secure, but then \dots
+      \item Upgrades needed, or, not needed but wanted.
 
-    \item upgrades are needed, or not needed but wanted.
+      \item This might come in the form of updating a component or utilizing the 
+        system in an environment it wasn't designed for.
 
-    \item This might come in the form of updating a component or utilizing the 
-      system in an environment it wasn't designed for.
-
-  \end{itemize}
+    \end{itemize}
+  \end{remark}
 \end{frame}
 
 
@@ -144,6 +163,11 @@ jail.main(["jailopen", "../../etc/passwd"])
 
 \begin{frame}
   \begin{block}{UTF-8}
+    \begin{itemize}
+      \item A character encoding standard.
+      \item Uses variable length code words: from one byte.
+      \item First bit indicates if next byte is part of the same code word.
+    \end{itemize}
   \end{block}
 \end{frame}
 
@@ -191,9 +215,9 @@ jail.main(["jailopen", "../../etc/passwd"])
     \begin{pycode}[echo.sh]
 import subprocess
 proc = subprocess.Popen(["./echo.sh", "-E test\\ning"], \
-  stdout=subprocess.PIPE)
+stdout=subprocess.PIPE)
 print("\\begin{verbatim}" + proc.stdout.read().decode("utf-8") + \
-  "\\end{verbatim}")
+"\\end{verbatim}")
     \end{pycode}
   \end{example}
 \end{frame}
@@ -204,9 +228,9 @@ print("\\begin{verbatim}" + proc.stdout.read().decode("utf-8") + \
     \begin{pycode}[echofix.sh]
 import subprocess
 proc = subprocess.Popen(["./echofix.sh", "-E test\\ning"], \
-  stdout=subprocess.PIPE)
+stdout=subprocess.PIPE)
 print("\\begin{verbatim}" + proc.stdout.read().decode("utf-8") + \
-  "\\end{verbatim}")
+"\\end{verbatim}")
     \end{pycode}
   \end{example}
 \end{frame}
@@ -319,92 +343,92 @@ print("\\begin{verbatim}" + proc.stdout.read().decode("utf-8") + \
 \end{frame}
 
 
-\section{Malware}
-
-% XXX add better storyline to malware
-\subsection{Background}
-
-\begin{frame}
-  \begin{itemize}
-    \item Comes from \emph{malicious software} and means software with 
-      a malicious intent.
-
-    \item In the early days they were mostly experiments or pranks.
-
-    \item Today they are mostly used for special purposes:
-      \begin{itemize}
-        \item steal personal, financial or business information,
-        \item cripple competition,
-        \item etc.
-      \end{itemize}
-
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \begin{itemize}
-    \item There are many types of malware.
-
-    \item Their classification depends on the largest threat vector.
-
-  \end{itemize}
-\end{frame}
-
-\subsection{Malware Types}
-
-\begin{frame}[allowframebreaks]
-  \begin{description}
-    \item[Computer Virus]
-      A form of malware which has self-replicating code.
-      It \emph{infects} other programs by inserting itself into their program 
-      code, and in turn when these programs are run the virus payload is run to 
-      replicate even further.
-
-    \item[Worm]
-      A form of malware which replicates itself, not by infection, but by 
-      copying itself to different disks, via networks, or even emailing itself 
-      automatically to everyone in the user's contact list.
-
-    \item[Trojan Horse]
-      A form of malware which acts as a legitimate program but has hidden 
-      features which are malicious, e.g.\ a utility program which steals your 
-      login credentials in the background or simply acts as a backdoor.
-      Usually used in combination of social engineering.
-
-    \item[Rootkit]
-      A piece of software designed to provide access that would otherwise be 
-      restricted.
-      It also keeps well-hidden and is notoriously difficult to detect and 
-      remove.
-      Usually this comes from modifying the operating system.
-
-    \item[Spyware]
-      This software simply tries to gather information about a target without 
-      their knowledge.
-      Usually the collected information is sent to a third party.
-
-      Keylogging falls under this category.
-
-    \item[Adware]
-      This is simply a type of malware that presents advertisements to the user
-      of the infected system.
-      Obviously staying undetected is not an option, so making itself difficult
-      to remove is the strategy of choice.
-
-    \item[Scareware]
-      This is a type of malware that uses social engineering to trick users to 
-      buy unwanted software, e.g.\ fake antivirus software.
-
-    \item[Ransomware]
-      This is a type of malware that restricts the users access to the system.
-      A common technique is to encrypt all the user's files.
-      Then the user is presented with the option of buying the decryption key 
-      for bitcoins.
-
-      They typically propagate as trojans.
-
-  \end{description}
-\end{frame}
+%\section{Malware}
+%
+%% XXX add better storyline to malware
+%\subsection{Background}
+%
+%\begin{frame}
+%  \begin{itemize}
+%    \item Comes from \emph{malicious software} and means software with 
+%      a malicious intent.
+%
+%    \item In the early days they were mostly experiments or pranks.
+%
+%    \item Today they are mostly used for special purposes:
+%      \begin{itemize}
+%        \item steal personal, financial or business information,
+%        \item cripple competition,
+%        \item etc.
+%      \end{itemize}
+%
+%  \end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%  \begin{itemize}
+%    \item There are many types of malware.
+%
+%    \item Their classification depends on the largest threat vector.
+%
+%  \end{itemize}
+%\end{frame}
+%
+%\subsection{Malware Types}
+%
+%\begin{frame}[allowframebreaks]
+%  \begin{description}
+%    \item[Computer Virus]
+%      A form of malware which has self-replicating code.
+%      It \emph{infects} other programs by inserting itself into their program 
+%      code, and in turn when these programs are run the virus payload is run to 
+%      replicate even further.
+%
+%    \item[Worm]
+%      A form of malware which replicates itself, not by infection, but by 
+%      copying itself to different disks, via networks, or even emailing itself 
+%      automatically to everyone in the user's contact list.
+%
+%    \item[Trojan Horse]
+%      A form of malware which acts as a legitimate program but has hidden 
+%      features which are malicious, e.g.\ a utility program which steals your 
+%      login credentials in the background or simply acts as a backdoor.
+%      Usually used in combination of social engineering.
+%
+%    \item[Rootkit]
+%      A piece of software designed to provide access that would otherwise be 
+%      restricted.
+%      It also keeps well-hidden and is notoriously difficult to detect and 
+%      remove.
+%      Usually this comes from modifying the operating system.
+%
+%    \item[Spyware]
+%      This software simply tries to gather information about a target without 
+%      their knowledge.
+%      Usually the collected information is sent to a third party.
+%
+%      Keylogging falls under this category.
+%
+%    \item[Adware]
+%      This is simply a type of malware that presents advertisements to the user
+%      of the infected system.
+%      Obviously staying undetected is not an option, so making itself difficult
+%      to remove is the strategy of choice.
+%
+%    \item[Scareware]
+%      This is a type of malware that uses social engineering to trick users to 
+%      buy unwanted software, e.g.\ fake antivirus software.
+%
+%    \item[Ransomware]
+%      This is a type of malware that restricts the users access to the system.
+%      A common technique is to encrypt all the user's files.
+%      Then the user is presented with the option of buying the decryption key 
+%      for bitcoins.
+%
+%      They typically propagate as trojans.
+%
+%  \end{description}
+%\end{frame}
 
 
 
@@ -475,5 +499,5 @@ print("\\begin{verbatim}" + proc.stdout.read().decode("utf-8") + \
 
 \begin{frame}
   \small
-  \printbibliography{}
+  \printbibliography
 \end{frame}
