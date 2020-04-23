@@ -2,19 +2,14 @@ BobbyTables.png
 __pycache__/
 aliascnt.sty
 latexmkrc
-llncs.cls
-llncs2e.zip
-overview-slides.pdf
-overview-slides.pytxcode
+slides.pdf
+slides.pytxcode
 procmem.jpg
-pythontex-files-overview-slides/
-remreset.sty
+pythontex-files-slides/
 slides.tex
-splncs03.bst
-sprmindx.sty
 
-overview-notes.pdf
-overview-notes.pytxcode
-overview-slides.pdf.xoj
-pythontex-files-overview-notes/
+notes.pdf
+notes.pytxcode
+slides.pdf.xoj
+pythontex-files-notes/
 

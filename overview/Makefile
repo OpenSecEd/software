@@ -1,9 +1,9 @@
 LATEXFLAGS+=	-shell-escape
 
 .PHONY: all
-all: overview-slides.pdf overview-notes.pdf
+all: slides.pdf notes.pdf
 
-SRC=		overview-content.tex abstract.tex overview.bib
+SRC=		contents.tex abstract.tex bibliography.bib
 SRC+=		jail.py
 SRC+=		combine.c
 SRC+=		echo.sh echofix.sh
@@ -13,10 +13,10 @@ SRC+=		login.c
 
 DEPENDS+=	latexmkrc
 
-overview-slides.pdf overview-notes.pdf: ${SRC} ${DEPENDS}
+slides.pdf notes.pdf: ${SRC} ${DEPENDS}
 
-overview-slides.pdf: overview-slides.tex
-overview-notes.pdf: overview-notes.tex llncs
+slides.pdf: slides.tex
+notes.pdf: notes.tex
 
 procmem.jpg:
 	wget -O $@ https://www.linuxjournal.com/files/linuxjournal.com/linuxjournal/articles/067/6701/6701f1.jpg
