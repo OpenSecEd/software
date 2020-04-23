@@ -30,6 +30,7 @@ clean-depends:
 
 .PHONY: clean
 clean:
+	${RM} notes.pdf slides.pdf
 	${RM} -R __pycache__ _minted-*
 
 INCLUDE_MAKEFILES=../makefiles
