@@ -24,8 +24,8 @@ procmem.jpg:
 BobbyTables.png:
 	wget -O $@ http://imgs.xkcd.com/comics/exploits_of_a_mom.png
 
-.PHONY: clean-depends
-clean-depends:
+.PHONY: clean-depends distclean
+clean-depends distclean:
 	${RM} procmem.jpg BobbyTables.png
 
 .PHONY: clean
