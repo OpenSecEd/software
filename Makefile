@@ -1,4 +1,7 @@
-SUBDIR= 	overview/
+SUBDIR+= 	intro
+SUBDIR+=	broken-abstractions
+SUBDIR+= 	memory-management
+SUBDIR+= 	malware
 SUBDIR+= 	stacksmashlab/
 SUBDIR+= 	malwarelab/
 
