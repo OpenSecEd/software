@@ -74,6 +74,21 @@ jail.main(["jailopen", "../../etc/passwd"])
       \item First bit indicates if next byte is part of the same code word.
     \end{itemize}
   \end{block}
+
+  \begin{table}
+    \begin{tabular}{rrllll}
+      \textbf{Bytes} & \textbf{Avail bits} & \textbf{Byte 1}
+                                           & \textbf{Byte 2}
+                                           & \textbf{Byte 3}
+                                           & \textbf{Byte 4} \\
+                                           \toprule
+      1 & 7  & 0xxxxxxx &          &          & \\
+      2 & 11 & 110xxxxx & 10xxxxxx &          & \\
+      3 & 16 & 1110xxxx & 10xxxxxx & 10xxxxxx & \\
+      4 & 21 & 11110xxx & 10xxxxxx & 10xxxxxx & 10xxxxxx \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
 \end{frame}
 
 % XXX add more details on UTF-8 coding
