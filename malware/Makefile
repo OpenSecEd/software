@@ -4,12 +4,6 @@ LATEXFLAGS+=	-shell-escape
 all: slides.pdf notes.pdf
 
 SRC=		contents.tex abstract.tex bibliography.bib
-SRC+=		jail.py
-SRC+=		combine.c
-SRC+=		echo.sh echofix.sh
-SRC+=		BobbyTables.png
-SRC+=		procmem.jpg
-SRC+=		login.c
 
 DEPENDS+=	latexmkrc
 
