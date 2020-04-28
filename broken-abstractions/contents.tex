@@ -196,10 +196,19 @@ print("\\begin{verbatim}" + proc.stdout.read().decode("utf-8") + \
   \begin{minted}[startinline]{php}
     $sql = "SELECT * FROM client WHERE name = '$name'"
   \end{minted}
+
+  \pause
+
   \begin{itemize}
     \item Insert the name \mintinline[startinline]{php}{Eve' OR 1=1--}.
     \item This will get a totally different meaning.
   \end{itemize}
+
+  \pause
+
+  \begin{minted}[startinline]{sql}
+    SELECT * FROM client WHERE name = 'Eve' OR 1=1--
+  \end{minted}
 \end{frame}
 
 \begin{frame}

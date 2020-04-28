@@ -1,1 +1,5 @@
-[Software security] introduces the problems of software security.
+[![Video: Memory management][img]][vid]
+
+[vid]: https://youtu.be/ZUrZgsDurnQ
+[img]: https://img.youtube.com/vi/ZUrZgsDurnQ/hqdefault.jpg
+
