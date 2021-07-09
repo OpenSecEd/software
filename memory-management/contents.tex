@@ -1,0 +1,72 @@
+\mode*
+
+% Since this a solution template for a generic talk, very little can
+% be said about how it should be structured. However, the talk length
+% of between 15min and 45min and the theme suggest that you stick to
+% the following rules:  
+
+% - Exactly two or three sections (other than the summary).
+% - At *most* three subsections per section.
+% - Talk about 30s to 2min per frame. So there should be between about
+%   15 and 30 frames, all told.
+
+
+\section{Memory Management}
+
+\subsection{Memory Structure}
+
+\begin{frame}
+  \includegraphics[height=\textheight]{procmem.jpg}
+\end{frame}
+
+\subsection{Overruns}
+
+% XXX add more description of buffer overruns
+\begin{frame}
+  \begin{itemize}
+    \item Buffer overruns
+      \begin{itemize}
+        \item Stack overruns
+        \item Heap overruns
+      \end{itemize}
+
+    \item All variables in a program use storage from either the stack or heap.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \inputminted{C}{login.c}
+\end{frame}
+
+\begin{frame}
+  \begin{columns}[b]
+    \begin{column}{0.5\textwidth}
+      \inputminted[fontsize=\tiny]{C}{login.c}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \includegraphics[height=\textheight]{procmem.jpg}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% XXX add figure for previous example
+
+% XXX add more examples of overruns
+
+%\subsection{Double-Free Vulnerabilities}
+%
+%\begin{frame}
+%\end{frame}
+
+\subsection{Type Confusion}
+
+% XXX clarify slide on type confusion
+\begin{frame}
+  \begin{itemize}
+    \item There are some problems in object-oriented languages too.
+    \item Trick the system to point to a different memory location.
+    \item Thus a write using one type actually modifies something believed to 
+      be of another type somewhere else.
+  \end{itemize}
+\end{frame}
+

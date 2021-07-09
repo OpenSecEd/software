@@ -1,22 +1,18 @@
 LATEXFLAGS+=	-shell-escape
 
 .PHONY: all
-all: overview-slides.pdf overview-notes.pdf
+all: slides.pdf notes.pdf
 
-SRC=		overview-content.tex abstract.tex overview.bib
-SRC+=		jail.py
-SRC+=		combine.c
-SRC+=		echo.sh echofix.sh
-SRC+=		BobbyTables.png
+SRC=		contents.tex abstract.tex bibliography.bib
 SRC+=		procmem.jpg
 SRC+=		login.c
 
 DEPENDS+=	latexmkrc
 
-overview-slides.pdf overview-notes.pdf: ${SRC} ${DEPENDS}
+slides.pdf notes.pdf: ${SRC} ${DEPENDS}
 
-overview-slides.pdf: overview-slides.tex
-overview-notes.pdf: overview-notes.tex llncs
+slides.pdf: slides.tex
+notes.pdf: notes.tex
 
 procmem.jpg:
 	wget -O $@ https://www.linuxjournal.com/files/linuxjournal.com/linuxjournal/articles/067/6701/6701f1.jpg
@@ -24,12 +20,13 @@ procmem.jpg:
 BobbyTables.png:
 	wget -O $@ http://imgs.xkcd.com/comics/exploits_of_a_mom.png
 
-.PHONY: clean-depends
-clean-depends:
+.PHONY: clean-depends distclean
+clean-depends distclean:
 	${RM} procmem.jpg BobbyTables.png
 
 .PHONY: clean
 clean:
+	${RM} notes.pdf slides.pdf
 	${RM} -R __pycache__ _minted-*
 
 INCLUDE_MAKEFILES=../makefiles
